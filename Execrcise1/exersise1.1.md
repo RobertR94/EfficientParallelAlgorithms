@@ -37,3 +37,30 @@ The preprocessor is the first stage in the C++ build pipeline. It performs purel
   - **Macro Expansion (`#define`, `#undef`)**: Performs simple token and pattern substitution across the code.
   - **Conditional Compilation (`#ifdef`, `#ifndef`, `#if`, `#elif`, `#else`, `#endif`)**: Selectively includes or excludes blocks of code based on conditions (e.g., platform checks, debug vs. release mode via `NDEBUG`).
   - **Header Guards (`#pragma once` or `#ifndef` guards)**: Prevents circular dependencies and duplicate declarations when headers are included multiple times across translation units.
+
+## Compiler
+
+The compiler takes the preprocessed translation unit (e.g., `.cpp`, `.cxx`, `.cc`) and translates it into target-specific machine code, packaging it into an object file.
+
+- **Compilation Pipeline**:
+  - **Frontend (Parsing & Semantic Analysis)**:
+    - Tokenizes the preprocessed source and constructs an Abstract Syntax Tree (AST).
+    - Performs strict syntax and static type checks.
+    - Executes compile-time evaluations (e.g., `constexpr`, `consteval`) and instantiates C++ templates.
+  - **Middle-End (Optimization)**:
+    - Translates AST into an Intermediate Representation (IR).
+    - Applies code optimizations (e.g., function inlining, loop unrolling, auto-vectorization/SIMD, dead code elimination, constant folding) driven by optimization flags (e.g., `-O0`, `-O2`, `-O3`).
+  - **Backend (Code Generation)**:
+    - Translates optimized IR into architecture-specific assembly and binary machine instructions.
+
+- **Output (Object Files)**:
+  - Produces one **Object File** (`.o` on Linux/macOS, `.obj` on Windows) per translation unit.
+  - Contains compiled machine instructions, debug symbols (if enabled via `-g`), and a **symbol table** containing:
+    - *Defined symbols*: Functions and variables implemented in this translation unit.
+    - *Undefined (external) symbols*: References to functions/variables declared (e.g., via headers) but implemented in other translation units or external libraries, which must be resolved by the linker.
+
+- **Useful Compiler Flags**:
+  - `-c`: Compile source files into object files without running the linker.
+  - `-S`: Stop after compilation and emit human-readable assembly code (`.s`).
+  - `-O2` / `-O3`: Enable standard / high-performance compiler optimizations.
+  - `-Wall -Wextra -Wpedantic`: Enable standard compiler diagnostics and warnings.
